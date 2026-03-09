@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Labor Margin Report Generator</title>
+    <!-- Modern Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="background-effects">
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+    </div>
+
+    <main class="container">
+        <header class="header">
+            <div class="logo-wrapper">
+                <i class="ri-bar-chart-box-fill"></i>
+            </div>
+            <div class="header-text">
+                <h1>Report Generator <span class="badge">Pro</span></h1>
+                <p>Upload your exported Excel data to instantly analyze labor margins and job costs.</p>
+            </div>
+        </header>
+
+        <section class="upload-grid" id="upload-grid">
+            <!-- File 1: General Ledger -->
+            <div class="upload-card" data-file-type="gl">
+                <div class="card-header">
+                    <span class="step-num">1</span>
+                    <h3>General Ledger</h3>
+                </div>
+                <div class="drop-zone" id="drop-gl">
+                    <input type="file" id="file-gl" accept=".xlsx,.xls" hidden />
+                    <i class="ri-file-excel-2-line xl-icon"></i>
+                    <p class="drop-text">Drag & drop or <span class="browse-link">browse</span></p>
+                    <p class="file-name" id="name-gl"></p>
+                </div>
+            </div>
+
+            <!-- File 2: Sales Analysis -->
+            <div class="upload-card" data-file-type="inventory">
+                <div class="card-header">
+                    <span class="step-num">2</span>
+                    <h3>Sales Analysis by Item</h3>
+                </div>
+                <div class="drop-zone" id="drop-inventory">
+                    <input type="file" id="file-inventory" accept=".xlsx,.xls" hidden />
+                    <i class="ri-file-excel-2-line xl-icon"></i>
+                    <p class="drop-text">Drag & drop or <span class="browse-link">browse</span></p>
+                    <p class="file-name" id="name-inventory"></p>
+                </div>
+            </div>
+
+            <!-- File 3: Job Cost Query -->
+            <div class="upload-card" data-file-type="cost">
+                <div class="card-header">
+                    <span class="step-num">3</span>
+                    <h3>Job Cost Query</h3>
+                </div>
+                <div class="drop-zone" id="drop-cost">
+                    <input type="file" id="file-cost" accept=".xlsx,.xls" hidden />
+                    <i class="ri-file-excel-2-line xl-icon"></i>
+                    <p class="drop-text">Drag & drop or <span class="browse-link">browse</span></p>
+                    <p class="file-name" id="name-cost"></p>
+                </div>
+            </div>
+
+            <!-- File 4: Job Summary -->
+            <div class="upload-card" data-file-type="master">
+                <div class="card-header">
+                    <span class="step-num">4</span>
+                    <h3>Job Summary (Master)</h3>
+                </div>
+                <div class="drop-zone" id="drop-master">
+                    <input type="file" id="file-master" accept=".xlsx,.xls" hidden />
+                    <i class="ri-file-excel-2-line xl-icon"></i>
+                    <p class="drop-text">Drag & drop or <span class="browse-link">browse</span></p>
+                    <p class="file-name" id="name-master"></p>
+                </div>
+            </div>
+        </section>
+
+        <section class="action-section">
+            <div class="status-indicator" id="status-indicator">
+                <div class="status-dot"></div>
+                <span id="status-text">Waiting for 4 files...</span>
+            </div>
+            
+            <button id="generate-btn" class="primary-btn" disabled>
+                <span class="btn-text">Generate Report</span>
+                <i class="ri-flashlight-fill"></i>
+                <div class="loader hidden" id="spinner"></div>
+            </button>
+        </section>
+        
+        <!-- Success / Error Toast -->
+        <div id="toast" class="toast hidden">
+            <i id="toast-icon" class="ri-checkbox-circle-fill"></i>
+            <span id="toast-message">Report generated successfully!</span>
+        </div>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
