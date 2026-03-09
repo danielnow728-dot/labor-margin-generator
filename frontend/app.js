@@ -120,8 +120,8 @@ document.addEventListener('DOMContentLoaded', () => {
         formData.append('master', files.master);
 
         try {
-            // Note: Update URL if running backend on a different port/host
-            const response = await fetch('http://localhost:8000/generate-report', {
+            // Use relative path so it works seamlessly on localhost and Render
+            const response = await fetch('/generate-report', {
                 method: 'POST',
                 body: formData,
             });
