@@ -309,8 +309,15 @@ def load_job_master(jobmaster_path: Path) -> pd.DataFrame:
     return out
 
 
-def build_labor_analysis(rev: pd.DataFrame, exp: pd.DataFrame, jm: pd.DataFrame) -> pd.DataFrame:
-    df = rev.merge(exp, on="Job Code", how="left", suffixes=("", "_COST")).merge(jm, on="Job Code", how="left")
+def build_labor_analysis(rev: pd.DataFrame, exp: pd.DataFrame, jm: pd.DataFrame, job_to_client: pd.DataFrame) -> pd.DataFrame:
+    df = pd.merge(rev, exp, on="Job Code", how="outer", suffixes=("", "_COST")).merge(jm, on="Job Code", how="left")
+
+    # Fill missing Client for jobs that only had costs and no revenue
+    if "Client" in df.columns:
+        df = df.merge(job_to_client, on="Job Code", how="left", suffixes=("", "_GL"))
+        if "Client_GL" in df.columns:
+            df["Client"] = df["Client"].where(pd.notna(df["Client"]) & (df["Client"] != ""), df["Client_GL"].fillna(""))
+            df = df.drop(columns=["Client_GL"])
 
     df["Labor Revenue"] = df["Labor"].fillna(0.0)
     df["Labor Cost"] = df["Labor_COST"].fillna(0.0) if "Labor_COST" in df.columns else 0.0
@@ -470,7 +477,7 @@ def build_report(gl_path: str, inventory_path: str, job_cost_path: str, job_mast
     expense_summary = build_expense_summary(cost_path)
     job_master = load_job_master(jobmaster_path)
 
-    labor_analysis = build_labor_analysis(revenue_summary, expense_summary, job_master)
+    labor_analysis = build_labor_analysis(revenue_summary, expense_summary, job_master, job_to_client)
 
     with pd.ExcelWriter(output_path, engine="openpyxl") as writer:
         revenue_summary.to_excel(writer, sheet_name="Revenue Summary", index=False)
